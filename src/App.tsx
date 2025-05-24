@@ -1,70 +1,68 @@
 import { useEffect, useState } from "react";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
-import { collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
+import './App.css';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "./firebase";
 import AuthForm from "./components/AuthForm";
+import ProfileCardForm from "./components/ProfileCardForm";
+import ProfileCardList from "./components/ProfileCardList";
 
-type Memo = {
+type Contact = {
   id: string;
-  text: string;
+  name: string;
+  job: string;
 };
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [memos, setMemos] = useState<Memo[]>([]);
-  const [input, setInput] = useState("");
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const auth = getAuth();
 
-  // 認証状態監視
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
     return () => unsubscribe();
   }, []);
 
-  // ログイン成功時に呼ぶコールバック
-  const onLoginSuccess = () => {
-    // 認証状態はonAuthStateChangedで監視しているので特に処理不要ですが、
-    // 必要に応じてここで追加処理も可能です
-  };
-
-  // メモ一覧をユーザーごとにリアルタイム取得
   useEffect(() => {
     if (!user) {
-      setMemos([]);
+      setContacts([]);
       return;
     }
 
-    const q = query(collection(db, "memos"), where("uid", "==", user.uid));
+    const q = query(collection(db, "contacts"), where("uid", "==", user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const memosData = snapshot.docs.map(doc => ({
+      const contactData = snapshot.docs.map((doc) => ({
         id: doc.id,
-        text: doc.data().text,
+        name: doc.data().name,
+        job: doc.data().job,
       }));
-      setMemos(memosData);
+      setContacts(contactData);
     });
 
     return () => unsubscribe();
   }, [user]);
 
-  const addMemo = async () => {
-    if (!user) {
-      alert("ログインしてください");
-      return;
-    }
-    if (input.trim() === "") return;
-
-    await addDoc(collection(db, "memos"), {
-      text: input,
+  const addContact = async (data: { name: string; profession: string }) => {
+    if (!user) return;
+    await addDoc(collection(db, "contacts"), {
+      name: data.name,
+      job: data.profession,
       uid: user.uid,
     });
-    setInput("");
   };
-
-  const deleteMemo = async (id: string) => {
-    await deleteDoc(doc(db, "memos", id));
+  const deleteContact = async (id: string) => {
+    await deleteDoc(doc(db, "contacts", id));
   };
 
   const handleLogout = async () => {
@@ -72,30 +70,17 @@ export default function App() {
   };
 
   if (!user) {
-    return <AuthForm onLoginSuccess={onLoginSuccess} />;
+    return <AuthForm onLoginSuccess={() => {}} />;
   }
 
   return (
-    <div>
-      <h1>メモ帳</h1>
+    <div style={{ padding: "16px" }}>
+      <h1>メモ</h1>
       <p>こんにちは、{user.email}</p>
       <button onClick={handleLogout}>ログアウト</button>
 
-      <input
-        type="text"
-        placeholder="メモを入力"
-        value={input}
-        onChange={e => setInput(e.target.value)}
-      />
-      <button onClick={addMemo}>追加</button>
-
-      <ul>
-        {memos.map(memo => (
-          <li key={memo.id}>
-            {memo.text} <button onClick={() => deleteMemo(memo.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
+      <ProfileCardForm onSubmit={addContact} />
+      <ProfileCardList contacts={contacts} onDelete={deleteContact} />
     </div>
   );
 }
