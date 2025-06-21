@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
-import './App.css';
+import "./App.css";
 import {
   collection,
   onSnapshot,
@@ -74,10 +74,12 @@ export default function App() {
   }
 
   return (
-    <div style={{ padding: "16px" }}>
-      <h1>メモ</h1>
-      <p>こんにちは、{user.email}</p>
-      <button onClick={handleLogout}>ログアウト</button>
+    <div className="p-6 max-w-2xl mx-auto space-y-6">
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">メモ</h1>
+        <p>こんにちは、{user.email}</p>
+        <button onClick={handleLogout}>ログアウト</button>
+      </header>
 
       <ProfileCardForm onSubmit={addContact} />
       <ProfileCardList contacts={contacts} onDelete={deleteContact} />

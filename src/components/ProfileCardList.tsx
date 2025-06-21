@@ -10,22 +10,21 @@ type ProfileCardListProps = {
   onDelete: (id: string) => void;
 };
 
-export default function ProfileCardList({ contacts, onDelete }: ProfileCardListProps) {
+export default function ProfileCardList({
+  contacts,
+  onDelete,
+}: ProfileCardListProps) {
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4 md:grid-cols-2">
       {contacts.map((contact) => (
-        <div
-          key={contact.id}
-          className="border border-gray-300 rounded-md p-4 max-w-md mx-auto shadow-sm"
-        >
-          <p><strong>名前:</strong> {contact.name}</p>
-          <p><strong>職業:</strong> {contact.job}</p>
-          <button
-            onClick={() => onDelete(contact.id)}
-            className="mt-2 text-sm hover:underline"
-          >
-            削除
-          </button>
+        <div key={contact.id} className="p-6 bg-white rounded-lg shadow-md">
+          <div className="flex items-start justify-between">
+            <p className="font-semibold tracking-tight text-lg">
+              {contact.name}
+            </p>
+            <button onClick={() => onDelete(contact.id)}>削除</button>
+          </div>
+          <p>職業：{contact.job}</p>
         </div>
       ))}
     </div>
