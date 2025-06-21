@@ -51,10 +51,7 @@ export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
         className="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
-      <button
-        type="submit"
-        className="w-full bg-blue-600 font-semibold py-2 rounded-md hover:bg-blue-700 transition"
-      >
+      <button type="submit" className="w-full">
         追加
       </button>
     </form>
