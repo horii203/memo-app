@@ -10,11 +10,13 @@ import {
   doc,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import AuthForm from "./components/AuthForm";
 import ProfileCardForm from "./components/ProfileCardForm";
 import ProfileCardList from "./components/ProfileCardList";
+import EditModal from "./components/EditModal";
 
 type Contact = {
   id: string;
@@ -25,6 +27,10 @@ type Contact = {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editContact, setEditContact] = useState<Contact | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editJob, setEditJob] = useState("");
   const auth = getAuth();
 
   useEffect(() => {
@@ -65,6 +71,25 @@ export default function App() {
     await deleteDoc(doc(db, "contacts", id));
   };
 
+  // 編集開始
+  const handleEditClick = (contact: Contact) => {
+    setEditContact(contact);
+    setEditName(contact.name);
+    setEditJob(contact.job);
+    setEditModalOpen(true);
+  };
+
+  // 編集保存
+  const handleEditSave = async () => {
+    if (!editContact) return;
+    await updateDoc(doc(db, "contacts", editContact.id), {
+      name: editName,
+      job: editJob,
+    });
+    setEditModalOpen(false);
+    setEditContact(null);
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
   };
@@ -82,7 +107,22 @@ export default function App() {
       </header>
 
       <ProfileCardForm onSubmit={addContact} />
-      <ProfileCardList contacts={contacts} onDelete={deleteContact} />
+      <ProfileCardList
+        contacts={contacts}
+        onDelete={deleteContact}
+        onEdit={handleEditClick}
+      />
+
+      {/* 編集モーダル */}
+      <EditModal
+        open={editModalOpen}
+        name={editName}
+        job={editJob}
+        onNameChange={setEditName}
+        onJobChange={setEditJob}
+        onSave={handleEditSave}
+        onClose={() => setEditModalOpen(false)}
+      />
     </div>
   );
 }
