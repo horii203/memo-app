@@ -2,19 +2,28 @@
 import { useState } from "react";
 
 type ProfileCardFormProps = {
-  onSubmit: (data: { name: string; profession: string }) => void;
+  onSubmit: (data: {
+    name: string;
+    profession: string;
+    hobby: string;
+    other: string;
+  }) => void;
 };
 
 export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
   const [name, setName] = useState("");
   const [profession, setProfession] = useState("");
+  const [hobby, setHobby] = useState("");
+  const [other, setOther] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() === "" || profession.trim() === "") return;
-    onSubmit({ name, profession });
+    onSubmit({ name, profession, hobby, other });
     setName("");
     setProfession("");
+    setHobby("");
+    setOther("");
   };
 
   return (
@@ -48,7 +57,31 @@ export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
         value={profession}
         onChange={(e) => setProfession(e.target.value)}
         placeholder="例: エンジニア"
-        className="w-full px-3 py-2 mb-6 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <label className="block mb-2 text-gray-700 font-medium" htmlFor="hobby">
+        趣味
+      </label>
+      <input
+        id="hobby"
+        type="text"
+        value={hobby}
+        onChange={(e) => setHobby(e.target.value)}
+        placeholder="例: 趣味"
+        className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      <label className="block mb-2 text-gray-700 font-medium" htmlFor="other">
+        その他
+      </label>
+      <textarea
+        id="other"
+        value={other}
+        onChange={(e) => setOther(e.target.value)}
+        placeholder=""
+        className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        rows={3}
       />
 
       <button type="submit" className="w-full">

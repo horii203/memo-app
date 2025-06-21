@@ -3,6 +3,8 @@ type Contact = {
   id: string;
   name: string;
   job: string;
+  hobby?: string;
+  other?: string;
 };
 
 type ProfileCardListProps = {
@@ -29,7 +31,13 @@ export default function ProfileCardList({
               <button onClick={() => onDelete(contact.id)}>削除</button>
             </div>
           </div>
-          <p>職業：{contact.job}</p>
+          <div className="text-gray-600">職業：{contact.job}</div>
+          {contact.hobby && (
+            <div className="text-gray-600">趣味: {contact.hobby}</div>
+          )}
+          {contact.other && (
+            <div className="text-gray-600">その他: {contact.other}</div>
+          )}
         </div>
       ))}
     </div>

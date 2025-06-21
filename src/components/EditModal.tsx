@@ -4,8 +4,12 @@ type Props = {
   open: boolean;
   name: string;
   job: string;
+  hobby?: string;
+  other?: string;
   onNameChange: (value: string) => void;
   onJobChange: (value: string) => void;
+  onHobbyChange: (value: string) => void;
+  onOtherChange?: (value: string) => void;
   onSave: () => void;
   onClose: () => void;
 };
@@ -14,8 +18,12 @@ export default function EditModal({
   open,
   name,
   job,
+  hobby,
+  other,
   onNameChange,
   onJobChange,
+  onHobbyChange,
+  onOtherChange,
   onSave,
   onClose,
 }: Props) {
@@ -60,6 +68,20 @@ export default function EditModal({
           value={job}
           onChange={(e) => onJobChange(e.target.value)}
           placeholder="職業"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={hobby}
+          onChange={(e) => onHobbyChange(e.target.value)}
+          placeholder="趣味"
+          className="border p-2 mb-2 w-full"
+        />
+        <input
+          type="text"
+          value={other}
+          onChange={(e) => onOtherChange?.(e.target.value)}
+          placeholder="その他"
           className="border p-2 mb-2 w-full"
         />
         <div className="flex gap-2 mt-4">

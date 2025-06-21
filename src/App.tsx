@@ -11,6 +11,7 @@ import {
   query,
   where,
   updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import AuthForm from "./components/AuthForm";
@@ -22,6 +23,8 @@ type Contact = {
   id: string;
   name: string;
   job: string;
+  hobby?: string;
+  other?: string;
 };
 
 export default function App() {
@@ -31,6 +34,8 @@ export default function App() {
   const [editContact, setEditContact] = useState<Contact | null>(null);
   const [editName, setEditName] = useState("");
   const [editJob, setEditJob] = useState("");
+  const [editHobby, setEditHobby] = useState("");
+  const [editOther, setEditOther] = useState("");
   const auth = getAuth();
 
   useEffect(() => {
@@ -52,6 +57,8 @@ export default function App() {
         id: doc.id,
         name: doc.data().name,
         job: doc.data().job,
+        hobby: doc.data().hobby || "",
+        other: doc.data().other || "",
       }));
       setContacts(contactData);
     });
@@ -59,12 +66,20 @@ export default function App() {
     return () => unsubscribe();
   }, [user]);
 
-  const addContact = async (data: { name: string; profession: string }) => {
+  const addContact = async (data: {
+    name: string;
+    profession: string;
+    hobby?: string;
+    other?: string;
+  }) => {
     if (!user) return;
     await addDoc(collection(db, "contacts"), {
       name: data.name,
       job: data.profession,
+      hobby: data.hobby,
+      other: data.other,
       uid: user.uid,
+      createdAt: serverTimestamp(),
     });
   };
   const deleteContact = async (id: string) => {
@@ -76,6 +91,8 @@ export default function App() {
     setEditContact(contact);
     setEditName(contact.name);
     setEditJob(contact.job);
+    setEditHobby(contact.hobby || "");
+    setEditOther(contact.other || "");
     setEditModalOpen(true);
   };
 
@@ -85,6 +102,8 @@ export default function App() {
     await updateDoc(doc(db, "contacts", editContact.id), {
       name: editName,
       job: editJob,
+      hobby: editHobby,
+      other: editOther,
     });
     setEditModalOpen(false);
     setEditContact(null);
@@ -99,7 +118,7 @@ export default function App() {
   }
 
   return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
+    <div className="p-6 max-w-4xl mx-auto space-y-6">
       <header>
         <h1 className="text-5xl font-bold">メモ</h1>
         <div className="flex items-center justify-between mt-4">
@@ -122,8 +141,12 @@ export default function App() {
         open={editModalOpen}
         name={editName}
         job={editJob}
+        hobby={editHobby}
+        other={editOther}
         onNameChange={setEditName}
         onJobChange={setEditJob}
+        onHobbyChange={setEditHobby}
+        onOtherChange={setEditOther}
         onSave={handleEditSave}
         onClose={() => setEditModalOpen(false)}
       />
