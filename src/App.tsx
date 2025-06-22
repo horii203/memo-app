@@ -23,21 +23,23 @@ type Contact = {
   id: string;
   name: string;
   job: string;
-  hobby?: string;
-  other?: string;
+  hobby?: string; // オプション
+  other?: string; // オプション
 };
 
 export default function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editContact, setEditContact] = useState<Contact | null>(null);
+  const [user, setUser] = useState<User | null>(null); // ユーザー情報
+  const [contacts, setContacts] = useState<Contact[]>([]); // プロフィールカードのリスト
+  const [editModalOpen, setEditModalOpen] = useState(false); // 編集モーダルの開閉状態
+  const [editContact, setEditContact] = useState<Contact | null>(null); // 編集対象の連絡先
+  // 編集モーダルのフォーム入力欄の状態。文字が入力されるたびに更新
   const [editName, setEditName] = useState("");
   const [editJob, setEditJob] = useState("");
   const [editHobby, setEditHobby] = useState("");
   const [editOther, setEditOther] = useState("");
-  const auth = getAuth();
+  const auth = getAuth(); // Firebase Authのインスタンスを取得
 
+  // ユーザーのログイン状態を監視して、ログイン・ログアウトの変化をリアルタイムで反映
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -45,6 +47,7 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  // ログイン中のユーザーの「contacts」コレクションをリアルタイムで取得・表示
   useEffect(() => {
     if (!user) {
       setContacts([]);
@@ -66,22 +69,27 @@ export default function App() {
     return () => unsubscribe();
   }, [user]);
 
+  // 新規追加
   const addContact = async (data: {
     name: string;
-    profession: string;
+    job: string;
     hobby?: string;
     other?: string;
   }) => {
+    // ログインしていなければ処理を中断
     if (!user) return;
+    // Firestore にデータを追加
     await addDoc(collection(db, "contacts"), {
       name: data.name,
-      job: data.profession,
+      job: data.job,
       hobby: data.hobby,
       other: data.other,
       uid: user.uid,
       createdAt: serverTimestamp(),
     });
   };
+
+  // 削除
   const deleteContact = async (id: string) => {
     await deleteDoc(doc(db, "contacts", id));
   };
@@ -120,7 +128,7 @@ export default function App() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <header>
-        <h1 className="text-5xl font-bold">メモ</h1>
+        <h1 className="text-5xl font-bold">メモ帳</h1>
         <div className="flex items-center justify-between mt-4">
           <p>こんにちは、{user.email}</p>
           <button onClick={handleLogout} className="whitespace-nowrap">
@@ -129,7 +137,10 @@ export default function App() {
         </div>
       </header>
 
+      {/* 入力フォーム */}
       <ProfileCardForm onSubmit={addContact} />
+
+      {/* プロフィールカード一覧 */}
       <ProfileCardList
         contacts={contacts}
         onDelete={deleteContact}

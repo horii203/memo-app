@@ -1,17 +1,17 @@
 import React from "react";
 
 type Props = {
-  open: boolean;
+  open: boolean; // モーダルの開閉状態
   name: string;
   job: string;
   hobby?: string;
   other?: string;
-  onNameChange: (value: string) => void;
+  onNameChange: (value: string) => void; // 名前が変更されたときに呼ばれる関数
   onJobChange: (value: string) => void;
   onHobbyChange: (value: string) => void;
   onOtherChange?: (value: string) => void;
-  onSave: () => void;
-  onClose: () => void;
+  onSave: () => void; // 保存ボタンが押されたときに呼ばれる関数
+  onClose: () => void; // モーダルを閉じるときに呼ばれる関数
 };
 
 export default function EditModal({
@@ -27,6 +27,7 @@ export default function EditModal({
   onSave,
   onClose,
 }: Props) {
+  // falseの場合は何も表示しない
   if (!open) return null;
 
   // モーダル用のスタイル

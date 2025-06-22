@@ -1,54 +1,56 @@
-# React + TypeScript + Vite
+# プロフィール管理アプリ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+このプロジェクトは、React・TypeScript・Vite・Firebase を使ったシンプルなメモアプリです。  
+ユーザー認証（メールアドレス・パスワード）とプロフィール登録機能を備えています。
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 主な機能
 
-## Expanding the ESLint configuration
+- Firebase Authentication によるユーザー認証
+- Firestore にプロフィール情報を保存・編集・削除
+- リアルタイムでプロフィール一覧の更新を反映
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 技術スタック
+
+- React
+- TypeScript
+- Vite
+- Firebase Authentication
+- Firebase Firestore
+- Tailwind CSS
+
+---
+
+## セットアップ方法
+
+### 1. Firebase プロジェクトを作成
+
+- [Firebase コンソール](https://console.firebase.google.com/)にアクセスし、新しいプロジェクトを作成します。
+- 「Authentication」機能を有効にし、メール/パスワード認証をオンにします。
+- 「Firestore Database」を作成します。
+
+---
+
+### 2. 環境変数ファイルの準備
+
+1. プロジェクト直下にある `.env.example` ファイルを `.env` にコピーします。
+
+2. .env ファイルに Firebase 設定情報を入力します。
+   ※ 各値は Firebase コンソールの「プロジェクトの設定」→「マイアプリ」から取得できます。
+
+### 3. 依存パッケージのインストール
+
+```
+  npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 4. 開発サーバーの起動
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+npm run dev
+```
+
+起動後、ブラウザで http://localhost:5173 にアクセスしてください。

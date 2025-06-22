@@ -8,9 +8,9 @@ type Contact = {
 };
 
 type ProfileCardListProps = {
-  contacts: Contact[];
-  onDelete: (id: string) => void;
-  onEdit: (contact: Contact) => void;
+  contacts: Contact[]; // プロフィールカードのリスト
+  onDelete: (id: string) => void; // 削除ボタンが押されたときのコールバック
+  onEdit: (contact: Contact) => void; // 編集ボタンが押されたときのコールバック
 };
 
 export default function ProfileCardList({

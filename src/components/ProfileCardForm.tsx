@@ -4,7 +4,7 @@ import { useState } from "react";
 type ProfileCardFormProps = {
   onSubmit: (data: {
     name: string;
-    profession: string;
+    job: string;
     hobby: string;
     other: string;
   }) => void;
@@ -12,16 +12,20 @@ type ProfileCardFormProps = {
 
 export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
   const [name, setName] = useState("");
-  const [profession, setProfession] = useState("");
+  const [job, setjob] = useState("");
   const [hobby, setHobby] = useState("");
   const [other, setOther] = useState("");
 
+  // フォームの送信処理
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim() === "" || profession.trim() === "") return;
-    onSubmit({ name, profession, hobby, other });
+    // 「名前」と「職業」が空の場合は送信しない
+    if (name.trim() === "" || job.trim() === "") return;
+    // 入力されたデータを親コンポーネントに送信
+    onSubmit({ name, job, hobby, other });
+    // 送信後にフォームの状態を初期化して空にする
     setName("");
-    setProfession("");
+    setjob("");
     setHobby("");
     setOther("");
   };
@@ -45,17 +49,14 @@ export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
         className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
-      <label
-        className="block mb-2 text-gray-700 font-medium"
-        htmlFor="profession"
-      >
+      <label className="block mb-2 text-gray-700 font-medium" htmlFor="job ">
         職業
       </label>
       <input
-        id="profession"
+        id="job "
         type="text"
-        value={profession}
-        onChange={(e) => setProfession(e.target.value)}
+        value={job}
+        onChange={(e) => setjob(e.target.value)}
         placeholder="例: エンジニア"
         className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
@@ -68,7 +69,7 @@ export default function ProfileCardForm({ onSubmit }: ProfileCardFormProps) {
         type="text"
         value={hobby}
         onChange={(e) => setHobby(e.target.value)}
-        placeholder="例: 趣味"
+        placeholder="例: ギター"
         className="w-full px-3 py-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
 
