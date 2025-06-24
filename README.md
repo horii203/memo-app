@@ -5,6 +5,12 @@
 
 ---
 
+## 公開 URL
+
+[https://memo-app-7b2c8.web.app/](https://memo-app-7b2c8.web.app/)
+
+---
+
 ## 主な機能
 
 - Firebase Authentication によるユーザー認証
